@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Controle de Betoneiras</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      background: #f9f9f9;
+    }
+    header {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    header h1 {
+      flex: 1 1 100%;
+      margin: 0 0 10px 0;
+      color: #222;
+    }
+    header > * {
+      min-width: 150px;
+    }
+    input[type="search"] {
+      padding: 6px 8px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      flex: 1;
+      max-width: 300px;
+    }
+    button {
+      cursor: pointer;
+      padding: 6px 12px;
+      background-color: #007bff;
+      border: none;
+      color: white;
+      border-radius: 4px;
+      font-size: 16px;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    form {
+      margin-bottom: 20px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    form input, form select, form button {
+      padding: 8px;
+      font-size: 16px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      flex: 1;
+      min-width: 150px;
+    }
+    form button {
+      flex: 0 0 auto;
+      max-width: 160px;
+    }
+    #listaBetoneiras {
+      list-style: none;
+      padding: 0;
+      max-height: 400px;
+      overflow-y: auto;
+      border: 1px solid #ddd;
+      background: white;
+      border-radius: 4px;
+    }
+    #listaBetoneiras li {
+      padding: 8px 12px;
+      border-bottom: 1px solid #eee;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 16px;
+    }
+    #listaBetoneiras li:last-child {
+      border-bottom: none;
+    }
+    .status {
+      font-weight: bold;
+      padding: 2px 6px;
+      border-radius: 4px;
+      color: white;
+      font-size: 14px;
+      min-width: 90px;
+      text-align: center;
+    }
+    .status.Disponível { background-color: green; }
+    .status.Alugada { background-color: red; }
+    .status.Manutenção { background-color: orange; }
+    #historico {
+      list-style: none;
+      padding: 0;
+      max-height: 150px;
+      overflow-y: auto;
+      border: 1px solid #ddd;
+      background: white;
+      border-radius: 4px;
+      font-size: 14px;
+      color: #555;
+    }
+    #historico li {
+      padding: 4px 8px;
+      border-bottom: 1px solid #eee;
+    }
+    #historico li:last-child {
+      border-bottom: none;
+    }
+    .alerta {
+      color: red;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Controle de Betoneiras</h1>
+    <button onclick="exportCSV()">📁 Exportar CSV</button>
+    <button onclick="exportBackup()">🗂️ Backup JSON</button>
+    <select id="statusFilter" onchange="filterByStatus()">
+      <option value="">🔍 Filtrar por Status</option>
+      <option value="Disponível">Disponível</option>
+      <option value="Alugada">Alugada</option>
+      <option value="Manutenção">Manutenção</option>
+    </select>
+    <input type="search" id="searchInput" placeholder="🔎 Buscar betoneira (ID ou nome)" oninput="filterBySearch()" />
+  </header>
+
+  <main>
+    <section>
+      <form id="formAdd">
+        <input type="text" id="betoneiraId" placeholder="ID da Betoneira (ex: bt01)" required />
+        <select id="betoneiraStatus" required>
+          <option value="Disponível">Disponível</option>
+          <option value="Alugada">Alugada</option>
+          <option value="Manutenção">Manutenção</option>
+        </select>
+        <input type="text" id="usuario" placeholder="Nome do usuário" required />
+        <button type="submit">Adicionar/Atualizar</button>
+      </form>
+    </section>
+
+    <section>
+      <h2>Lista de Betoneiras</h2>
+      <div id="alertaEscassez" class="alerta"></div>
+      <ul id="listaBetoneiras"></ul>
+    </section>
+
+    <section>
+      <h2>Histórico de Alterações</h2>
+      <ul id="historico"></ul>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
